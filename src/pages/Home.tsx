@@ -1,33 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Entypo  } from '@expo/vector-icons';
-import {  NativeStackScreenProps } from '@react-navigation/native-stack';
-
 import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-
-type Permission = null | false | true
-
-type Barcode = {
-	id: string,
-	name: string,
-	data: string,
-	type: number,
-}
-
-type RootStackParamList = {
-	Home: undefined;
-};
-
-type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>
-
-const BARCODE_DATA: Barcode[] = [
-	{
-		id: '1',
-		name: 'Test',
-		data: 'https://github.com/ThomasMcDonald/BarcodeScanner',
-		type: 256
-	}
-];
+import { Barcode, Permission, HomeProps } from '../types';
+import { getAllBarcodes, addBarcode } from '../storage/storage';
+import { genId } from '../utils';
 
 const styles = StyleSheet.create({
 	container: {
@@ -52,44 +29,62 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 	const [hasPermission, setHasPermission] = useState<Permission>(null);
 	const [scanned, setScanned] = useState<boolean>(false);
 	const [scanBarcode, setScanBarcode] = useState<boolean>(false);
+	const [barcodes, setBarcodes] = useState<Barcode[]>([]);
+	const [pageError, setPageError] = useState<Error>();
+
+	const loadInitialData = async () => {
+		try {
+			const existingBarcodes = await getAllBarcodes();
+			setBarcodes(existingBarcodes);
+		} catch(error) {
+			setPageError(error);
+		}
+	};
 
 	const getCameraPermission = async() => {
 		const { status } = await BarCodeScanner.requestPermissionsAsync();
 		setHasPermission(status === 'granted');
 	};
 
-	const handleBarcodeScan = ({ type, data, ...rest }) => {
+	const handleBarcodeScan = ({ type, data }) => {
 		setScanned(true);
 		setScanBarcode(false);
-
-		BARCODE_DATA.push({
-			id: BARCODE_DATA[BARCODE_DATA.length - 1].id + 1,
-			name: 'TEst',
+		
+		const newBarcode = {
+			id: genId(12),
+			name: 'Test',
 			data,
 			type
-		});
+		};
+		
+		addBarcode(newBarcode);
+		setBarcodes((b) =>[
+			...b,
+			newBarcode
+		]);
 	};
-
-	useEffect(() => {
-		getCameraPermission();
-	}, []);
-
+	
 	const enableScanner = () => {
 		setScanned(false);
 		setScanBarcode(true);
 	};
 
 	useEffect(() => {
+		loadInitialData();
+		getCameraPermission();
+	}, []);
+
+	useEffect(() => {
 		navigation.setOptions({ 
 			headerRight: () => (
 				<Pressable onPress={enableScanner}>
-					<Entypo name="circle-with-plus" size={24} color="black" />
+					<Entypo name="circle-with-plus" size={30} color="black" />
 				</Pressable>
 			)
 		});
 	}, [navigation]);
 
-	const renderItem = ({ item }: any): JSX.Element => {
+	const renderItem = ({ item }: {item: Barcode}): JSX.Element => {
 		const { id, name, data, type } = item;
 
 		return (
@@ -110,9 +105,8 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 
 	return (
 		<SafeAreaView style={styles.container}>
-
 			<FlatList 
-				data={BARCODE_DATA}
+				data={barcodes}
 				renderItem={renderItem}
 				keyExtractor={(item) => item.id}
 			/>
@@ -122,6 +116,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 				<BarCodeScanner 
 					onBarCodeScanned={scanned ? undefined : handleBarcodeScan}
 					style={[StyleSheet.absoluteFill, styles.barcodeScanner]}
+					barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
 				/>
 			}
 

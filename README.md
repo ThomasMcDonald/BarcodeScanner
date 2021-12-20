@@ -4,3 +4,4 @@ make own barcode component
 barcode camera needs to full screen
 put a lil built barcode in list item
 when clicking the list item you get a modal with barcode preview and all data
+	with delete and edit
