@@ -1,47 +1,54 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Entypo  } from '@expo/vector-icons';
+import {  NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable} from 'react-native';
+import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 type Permission = null | false | true
 
 type Barcode = {
-  id: string,
-  name: string,
-  data: string,
-  type: number,
+	id: string,
+	name: string,
+	data: string,
+	type: number,
 }
 
+type RootStackParamList = {
+	Home: undefined;
+};
+
+type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>
+
 const BARCODE_DATA: Barcode[] = [
-  {
-    id: '1',
-    name: 'Test',
-    data: 'https://github.com/ThomasMcDonald/BarcodeScanner',
-	type: 256
-  }
+	{
+		id: '1',
+		name: 'Test',
+		data: 'https://github.com/ThomasMcDonald/BarcodeScanner',
+		type: 256
+	}
 ];
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  barcodeScanner: {
-	flex: 1,
-	alignItems: 'center',
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  itemName: {
-    fontSize: 20,
-  },
+	container: {
+		flex: 1,
+	},
+	barcodeScanner: {
+		flex: 1,
+		alignItems: 'center',
+	},
+	item: {
+		backgroundColor: '#f9c2ff',
+		padding: 20,
+		marginVertical: 8,
+		marginHorizontal: 16,
+	},
+	itemName: {
+		fontSize: 20,
+	},
 });
 
-export default function Home({navigation}): JSX.Element {
+export default function Home({ navigation }: HomeProps): JSX.Element {
 	const [hasPermission, setHasPermission] = useState<Permission>(null);
 	const [scanned, setScanned] = useState<boolean>(false);
 	const [scanBarcode, setScanBarcode] = useState<boolean>(false);
@@ -49,20 +56,19 @@ export default function Home({navigation}): JSX.Element {
 	const getCameraPermission = async() => {
 		const { status } = await BarCodeScanner.requestPermissionsAsync();
 		setHasPermission(status === 'granted');
-	}
+	};
 
-	const handleBarcodeScan = ({type, data, ...rest}) => {
+	const handleBarcodeScan = ({ type, data, ...rest }) => {
 		setScanned(true);
 		setScanBarcode(false);
-
 
 		BARCODE_DATA.push({
 			id: BARCODE_DATA[BARCODE_DATA.length - 1].id + 1,
 			name: 'TEst',
 			data,
 			type
-		})
-	}
+		});
+	};
 
 	useEffect(() => {
 		getCameraPermission();
@@ -71,7 +77,7 @@ export default function Home({navigation}): JSX.Element {
 	const enableScanner = () => {
 		setScanned(false);
 		setScanBarcode(true);
-	}
+	};
 
 	useEffect(() => {
 		navigation.setOptions({ 
@@ -83,42 +89,42 @@ export default function Home({navigation}): JSX.Element {
 		});
 	}, [navigation]);
 
-  const renderItem = ({item}: any): JSX.Element => {
-    const {id, name, data, type} = item
+	const renderItem = ({ item }: any): JSX.Element => {
+		const { id, name, data, type } = item;
 
-    return (
-      <View key={id} style={styles.item}>
-        <Text style={styles.itemName}>{name} - {type}</Text>
-        <Text>{data}</Text>
-      </View>
-    )
-  }
-  
-  if (hasPermission === null) {
-	  return (<Text>Getting perms</Text>)
-  }
+		return (
+			<View key={id} style={styles.item}>
+				<Text style={styles.itemName}>{name} - {type}</Text>
+				<Text>{data}</Text>
+			</View>
+		);
+	};
 
-  if (hasPermission === false) {
-	  return (<Text>No perms</Text>)
-  }
- 
-  return (
-    <SafeAreaView style={styles.container}>
-	
-		<FlatList 
-			data={BARCODE_DATA}
-			renderItem={renderItem}
-			keyExtractor={(item) => item.id}
-		/>
+	if (hasPermission === null) {
+		return (<Text>Getting perms</Text>);
+	}
 
-		{
-			scanBarcode &&
-			<BarCodeScanner 
-				onBarCodeScanned={scanned ? undefined : handleBarcodeScan}
-				style={[StyleSheet.absoluteFill, styles.barcodeScanner]}
+	if (hasPermission === false) {
+		return (<Text>No perms</Text>);
+	}
+
+	return (
+		<SafeAreaView style={styles.container}>
+
+			<FlatList 
+				data={BARCODE_DATA}
+				renderItem={renderItem}
+				keyExtractor={(item) => item.id}
 			/>
-		}
-	
-    </SafeAreaView>
-  );
+
+			{
+				scanBarcode &&
+				<BarCodeScanner 
+					onBarCodeScanned={scanned ? undefined : handleBarcodeScan}
+					style={[StyleSheet.absoluteFill, styles.barcodeScanner]}
+				/>
+			}
+
+		</SafeAreaView>
+	);
 }
