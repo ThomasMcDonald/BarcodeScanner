@@ -6,6 +6,7 @@ async function getAllBarcodes(): Promise<Barcode[]> {
 
 	const data = await AsyncStorage.multiGet(keys);
 	const barcodes = [];
+	console.log('das');
 
 	for(const [, value] of data) {
 		barcodes.push(JSON.parse(value));
