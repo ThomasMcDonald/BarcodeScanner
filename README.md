@@ -2,6 +2,6 @@ the barcode scanner returns coordinates when it finds a barcode, would be real c
 
 make own barcode component
 barcode camera needs to full screen
-put a lil built barcode in list item
-when clicking the list item you get a modal with barcode preview and all data
+when clicking the list item you get a modal with barcode preview and all data 
 	with delete and edit
+	only let the user edit the title of the QR code, defauilt to 'QR CODE'
