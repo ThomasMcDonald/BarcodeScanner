@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Platform  } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, Dimensions, Platform, StatusBar  } from 'react-native';
 import { Camera } from 'expo-camera';
 import { BarCodeScanner as ExpoBarCodeScanner } from 'expo-barcode-scanner';
+import { AntDesign  } from '@expo/vector-icons';
 import { DEFAULT_NAME } from '../constants';
 import { BarcodeProps, Barcode } from '../types';
 import { genId } from '../utils';
@@ -20,11 +21,17 @@ const styles = StyleSheet.create({
 	camera: {
 		flex: 1,
 	},
-	buttonContainer: {
+	topButtonContainer: {
+		flex: 1,
+		backgroundColor: 'transparent',
+		paddingTop: StatusBar.currentHeight,
+		margin: 10
+	},
+	bottomButtonContainer: {
 		flex: 1,
 		backgroundColor: 'transparent',
 		flexDirection: 'row',
-		margin: 20,
+		margin: 10
 	},
 	button: {
 		flex: 0.1,
@@ -116,7 +123,7 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 	};
 
 	const closeCamera = () => {
-		navigation.navigate('Home');
+		navigation.pop();
 	};
 
 	useEffect(() => {
@@ -142,7 +149,7 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 		);
 	} else {
 		return (
-			<View style={styles.container}>
+			<SafeAreaView style={styles.container}>
 				<Camera 
 					style={[styles.camera, {}]}
 					type={cameraType}
@@ -155,14 +162,16 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 					barCodeScannerSettings={{
 						barCodeTypes: [ExpoBarCodeScanner.Constants.BarCodeType.qr],
 					}}
-				>
-					<View style={styles.buttonContainer}>
+				>	
+					<View style={styles.topButtonContainer}>
 						<TouchableOpacity
 							style={styles.button}
 							onPress={closeCamera}
 						>
-							<Text style={styles.text}>close </Text>
+							<AntDesign name="close" size={24} color="white" />
 						</TouchableOpacity>
+					</View>
+					<View style={styles.bottomButtonContainer}>
 						{	
 							Object.keys(Camera.Constants.Type).length &&
 							<TouchableOpacity
@@ -175,12 +184,12 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 											: Camera.Constants.Type.back
 									);
 								}}>
-								<Text style={styles.text}> Flip </Text>
+								<AntDesign name="swap" size={24} color="white" />
 							</TouchableOpacity>
 						}
 					</View>
 				</Camera>
-			</View>
+			</SafeAreaView>
 		);
 	}
 }
