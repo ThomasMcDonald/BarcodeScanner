@@ -35,12 +35,17 @@ async function removeBarcode(id: string): Promise<void> {
 	await AsyncStorage.removeItem(id);
 }
 
-async function editBarcode(id: string, barcode: Barcode): Promise<void> {
-	// this will throw an error if barcode doesnt exist
-	await getBarcodeById(id);
+async function editBarcode(id: string, barcode: Partial<Barcode>): Promise<Barcode> {
+	const currentData = await getBarcodeById(id);
 
-	const data = JSON.stringify(barcode);
-	await AsyncStorage.setItem(id, data);
+	const updatedData = {
+		...currentData,
+		...barcode
+	};
+
+	await AsyncStorage.setItem(id, JSON.stringify(updatedData));
+
+	return updatedData; 
 }
 
 export {
