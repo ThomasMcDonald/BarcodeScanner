@@ -1,4 +1,4 @@
-const DEFAULT_NAME = 'QR_CODE';
+const DEFAULT_NAME = 'QR CODE';
 
 export {
 	DEFAULT_NAME
