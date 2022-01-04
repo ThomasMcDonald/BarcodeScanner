@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignContent: 'center',
 		justifyContent: 'space-between',
-		paddingTop: StatusBar.currentHeight
+		paddingTop: StatusBar.currentHeight + 30
 	},
 	brandContainer: {
 		flex: 5,

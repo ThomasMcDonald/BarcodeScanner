@@ -4,7 +4,7 @@ import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable } from 'react
 import { useIsFocused } from '@react-navigation/native';
 import { Camera } from 'expo-camera';
 import { Barcode, Permission, HomeProps } from '../types';
-import { getAllBarcodes } from '../storage/storage';
+import { getAllBarcodes, getBarcodeById } from '../storage/storage';
 import BarcodeModal from '../components/BarcodeModal';
 import QRCode from 'react-native-qrcode-svg';
 
@@ -87,6 +87,33 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 		});
 	}, [navigation]);
 
+	const onModalClose = async (barcodeId: string) => {
+		let barcode;
+
+		if(barcodeId) {
+			try {
+				barcode = await getBarcodeById(barcodeId);
+			} catch(err) {
+				// barcode doesnt exist, move on
+			}
+		}
+
+		setBarcodes((barcodes: Barcode[]) => {
+			const index = barcodes.findIndex((b) => b.id === barcodeId);
+
+			if (!barcode) {
+				barcodes.splice(index, 1);
+			} else {
+				barcodes[index] = barcode;
+			}
+
+			return barcodes;
+		});
+
+		setShowModal(false);
+
+	};
+
 	const renderItem = ({ item }: {item: Barcode}): JSX.Element => {
 		const { id, name, data } = item;
 
@@ -120,7 +147,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 
 	return (
 		<SafeAreaView style={styles.container}>	
-			{showModal && <BarcodeModal barcode={currentBarcode} show={showModal} closeModal={() => setShowModal(false)}/>	}
+			{showModal && <BarcodeModal barcode={currentBarcode} show={showModal} closeModal={onModalClose}/>	}
 		
 			<FlatList 
 				data={barcodes}

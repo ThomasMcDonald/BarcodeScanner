@@ -12,7 +12,7 @@ type Barcode = {
 type BarcodeModalProps = {
 	barcode: Barcode;
 	show: boolean;
-	closeModal: () => void;
+	closeModal:(barcodeId?: string) => Promise<void>
 }
 
 type RootStackParamList = {
