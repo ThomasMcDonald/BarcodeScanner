@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, View, Text } from 'react-native';
+import { Pressable, StyleSheet, SafeAreaView,View, Text, StatusBar } from 'react-native';
 import { Entypo  } from '@expo/vector-icons';
 
 type Header = {
@@ -20,7 +20,10 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignContent: 'center',
 		justifyContent: 'space-between',
-		marginTop:50,
+		paddingTop: StatusBar.currentHeight
+	},
+	brandContainer: {
+		flex: 5,
 	},
 	brandText: {
 		fontSize: 25,
@@ -28,7 +31,9 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	buttonContainers: {
+		flex: 1,
 		justifyContent: 'center',
+		alignContent: 'center',
 	},
 	backButtonText: {
 		fontSize: 20,
@@ -41,7 +46,7 @@ export default function Header(props: Header): JSX.Element {
 	const { title = "Barcode Scanner", headerRight } = options;
 
 	return (
-		<View style={styles.header}>	
+		<SafeAreaView style={styles.header}>	
 			<View style={styles.content}>
 				<View style={styles.buttonContainers}>
 					{
@@ -51,7 +56,7 @@ export default function Header(props: Header): JSX.Element {
 						</Pressable>
 					}
 				</View>
-				<View >
+				<View style={styles.brandContainer}>
 					<Text style={styles.brandText}>{title}</Text>
 				</View>
 				<View style={styles.buttonContainers}>
@@ -59,8 +64,7 @@ export default function Header(props: Header): JSX.Element {
 						headerRight && headerRight()
 					}
 				</View>
-			</View>
-			
-		</View>
+			</View>	
+		</SafeAreaView>
 	);
 }

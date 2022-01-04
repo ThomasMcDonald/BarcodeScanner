@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Entypo  } from '@expo/vector-icons';
+import { AntDesign  } from '@expo/vector-icons';
 import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Camera } from 'expo-camera';
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 	},
 	item: {
 		flexDirection: 'row',
-		backgroundColor: '#f9c2ff',
+		backgroundColor: 'lightblue',
 		padding: 20,
 		marginVertical: 8,
 		marginHorizontal: 16,
@@ -36,6 +36,9 @@ const styles = StyleSheet.create({
 	qrCode: {
 		flex: 1,
 		justifyContent: 'flex-end'		
+	},
+	headerAction: {
+		textAlign: 'center'
 	}
 });
 
@@ -78,7 +81,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 			headerShown: true,
 			headerRight: () => (
 				<Pressable onPress={enableScanner}>
-					<Entypo name="circle-with-plus" size={30} color="black" />
+					<AntDesign name="pluscircle" size={25}  color="black" style={styles.headerAction}/>
 				</Pressable>
 			)
 		});
