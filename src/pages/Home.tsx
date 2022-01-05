@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AntDesign  } from '@expo/vector-icons';
-import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable, Alert } from 'react-native';
+import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable, StatusBar } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Camera } from 'expo-camera';
 import { Barcode, Permission, HomeProps } from '../types';

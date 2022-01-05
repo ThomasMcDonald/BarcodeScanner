@@ -136,7 +136,7 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 	useEffect(() => {
 		async function getCameraStatus() {
 			const { status } = await Camera.requestCameraPermissionsAsync();
-			setHasCameraPermission(false);
+			setHasCameraPermission(status === 'granted');
 		}
 
 		getCameraStatus();
