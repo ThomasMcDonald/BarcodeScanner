@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AntDesign  } from '@expo/vector-icons';
-import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable } from 'react-native';
+import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable, Alert } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Camera } from 'expo-camera';
 import { Barcode, Permission, HomeProps } from '../types';
@@ -19,6 +19,8 @@ const styles = StyleSheet.create({
 	item: {
 		flexDirection: 'row',
 		backgroundColor: 'lightblue',
+		justifyContent: 'center',
+		alignItems: 'center',
 		padding: 20,
 		marginVertical: 8,
 		marginHorizontal: 16,
@@ -85,7 +87,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 				</Pressable>
 			)
 		});
-	}, [navigation]);
+	}, [hasPermission, navigation]);
 
 	const onModalClose = async (barcodeId: string) => {
 		let barcode;

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignContent: 'center',
 		justifyContent: 'space-between',
-		paddingTop: StatusBar.currentHeight + 30
+		paddingTop: StatusBar.currentHeight + 20
 	},
 	brandContainer: {
 		flex: 5,
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 export default function Header(props: Header): JSX.Element {
 	const { back, navigation, options } = props;
 	
-	const { title = "Barcode Scanner", headerRight } = options;
+	const { title = "QR Scanner", headerRight } = options;
 
 	return (
 		<SafeAreaView style={styles.header}>	

@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		borderRadius: 20,
 		width: '80%',
-		padding: 35,
 		alignItems: 'center',
 		shadowColor: '#000',
 		shadowOffset: {
@@ -27,6 +26,24 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 5,
 	},
+	modalContent: {
+		paddingLeft: 35,
+		paddingRight: 35,
+		paddingBottom: 35,
+		alignItems: 'center',
+	},
+	modalTopButtonContainer: {
+		padding: 10,
+		width: '100%',
+		alignItems: 'flex-end'
+	},
+	modalBottomButtonContainer: {
+		padding: 10,
+		width: '100%',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'flex-end',
+	},
 	button: {
 		marginTop: 25,
 		borderRadius: 10,
@@ -35,6 +52,9 @@ const styles = StyleSheet.create({
 	},
 	buttonClose: {
 		backgroundColor: '#2196F3',
+	},
+	buttonDelete: {
+		backgroundColor: 'red',
 	},
 	textStyle: {
 		color: 'white',
@@ -48,7 +68,6 @@ const styles = StyleSheet.create({
 	},
 	barcodeNameInput: {
 		fontSize: 25,
-		width:  '4%'
 	},
 	saveButton: {
 		fontSize: 25
@@ -67,6 +86,11 @@ export default function BarcodeModal({ barcode, show, closeModal }: BarcodeModal
 
 	const onEditBarcode = () => {
 		setIsEditing(true);
+	};
+
+	const onCancelEdit = () => {
+		setIsEditing(false);
+		setBarcodeName(barcode.name);
 	};
 	
 	const updateBarcode = () => {
@@ -93,43 +117,67 @@ export default function BarcodeModal({ barcode, show, closeModal }: BarcodeModal
 			animationType="slide"
 			transparent={true}
 			visible={show}
-			onRequestClose={onModalClose}>
+			onRequestClose={onModalClose}
+		>
 			<View style={styles.centeredView}>
 				<View style={styles.modalView}>
+					<View style={styles.modalTopButtonContainer}>
+						<Pressable
+							onPress={onModalClose}>
+							<AntDesign name="close" size={24} color="black" />
+						</Pressable>
+					</View>
+					<View style={styles.modalContent}>
+						{
+							isEditing ?
+								(
+									<TextInput style={styles.barcodeNameInput} onChangeText={setBarcodeName} placeholder={barcode.name} value={barcodeName} ref={nameInput}/>
+								) :
+								(	
+									<Text style={styles.modalText}>{barcodeName}</Text>			
+								)
+						}
+					
+						<QRCode
+							value={barcode.data}
+							size={150}
+						/> 
+					</View>
 					{
 						isEditing ?
-							(
-								<View>
-									<TextInput style={styles.barcodeNameInput} onChangeText={setBarcodeName} placeholder={barcode.name} value={barcodeName} ref={nameInput}/>
-									<Pressable onPress={updateBarcode}>
-										<Text style={styles.saveButton}>Save</Text>
+							(	
+								<View style={styles.modalBottomButtonContainer}>
+									<Pressable 
+										style={[styles.button, styles.buttonClose]}
+										onPress={onCancelEdit}
+									>
+										<Text style={styles.textStyle}>Cancel</Text>
 									</Pressable>
+									<Pressable 
+										style={[styles.button, styles.buttonClose]}
+										onPress={updateBarcode}
+									>
+										<Text style={styles.textStyle}>Save</Text>
+									</Pressable>	
 								</View>
 							) :
 							(	
-								<View>
-									<Text style={styles.modalText}>{barcodeName}</Text>
-									<Pressable onPress={onEditBarcode}>
-										<AntDesign name="edit" size={60}/>
+								<View style={styles.modalBottomButtonContainer}>
+									<Pressable
+										style={[styles.button, styles.buttonDelete]}
+										onPress={onDeleteBarcode}
+									>
+										<Text style={styles.textStyle}>Delete</Text>
 									</Pressable>
-								</View>
+									<Pressable 
+										style={[styles.button, styles.buttonClose]}
+										onPress={onEditBarcode}
+									>
+										<Text style={styles.textStyle}>Edit</Text>
+									</Pressable>	
+								</View>			
 							)
 					}
-					
-					<QRCode
-						value={barcode.data}
-						size={150}
-					/> 
-					<Pressable
-						style={[styles.button, styles.buttonClose]}
-						onPress={onModalClose}>
-						<Text style={styles.textStyle}>Hide Modal</Text>
-					</Pressable>
-					<Pressable
-						style={[styles.button, styles.buttonClose]}
-						onPress={onDeleteBarcode}>
-						<Text style={styles.textStyle}>Delete</Text>
-					</Pressable>
 				</View>
 			</View>
 		</Modal>
