@@ -139,14 +139,6 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 		);
 	};
 
-	if (hasPermission === null) {
-		return (<Text>Getting perms</Text>);
-	}
-
-	if (hasPermission === false) {
-		return (<Text>No perms</Text>);
-	}
-
 	return (
 		<SafeAreaView style={styles.container}>	
 			{showModal && <BarcodeModal barcode={currentBarcode} show={showModal} closeModal={onModalClose}/>	}

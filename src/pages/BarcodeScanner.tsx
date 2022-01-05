@@ -14,9 +14,16 @@ const styles = StyleSheet.create({
 	},
 	information: { 
 		flex: 1,
-		justifyContent: 'center',
-		alignContent: 'center',
-		alignItems: 'center',
+		backgroundColor: 'black'
+	},
+	informationTextContainer: {
+		flexDirection: 'row',
+		backgroundColor: 'red',
+		textAlign:'center',
+		alignContent: 'center'
+	},
+	informationText: {
+		color: 'white',
 	},
 	camera: {
 		flex: 1,
@@ -129,23 +136,43 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 	useEffect(() => {
 		async function getCameraStatus() {
 			const { status } = await Camera.requestCameraPermissionsAsync();
-			setHasCameraPermission(status == 'granted');
+			setHasCameraPermission(false);
 		}
 
 		getCameraStatus();
 	}, []);
 
+	function CameraClose():JSX.Element {
+		return (
+			<View style={styles.topButtonContainer}>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={closeCamera}
+				>
+					<AntDesign name="close" size={24} color="white" />
+				</TouchableOpacity>
+			</View>
+		);
+	}
+
+	function InformationBooth({ information }: { information: string }): JSX.Element {
+		return (
+			<SafeAreaView style={styles.information}>
+				<CameraClose />
+				<View style={styles.informationTextContainer}>
+					<Text style={styles.informationText}>{information}</Text>
+				</View>
+			</SafeAreaView>
+		);
+	}
+
 	if (hasCameraPermission === null) {
 		return (
-			<View style={styles.information}>
-				<Text>Waiting for camera permissions</Text>
-			</View>
+			<InformationBooth information={"Waiting For Camera Permissions"} />
 		);
 	} else if (hasCameraPermission === false) {
 		return (
-			<View style={styles.information}>
-				<Text>No access to camera</Text>
-			</View>
+			<InformationBooth information={"Please enable camera permissions"} />
 		);
 	} else {
 		return (
@@ -163,14 +190,7 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 						barCodeTypes: [ExpoBarCodeScanner.Constants.BarCodeType.qr],
 					}}
 				>	
-					<View style={styles.topButtonContainer}>
-						<TouchableOpacity
-							style={styles.button}
-							onPress={closeCamera}
-						>
-							<AntDesign name="close" size={24} color="white" />
-						</TouchableOpacity>
-					</View>
+					<CameraClose />
 					<View style={styles.bottomButtonContainer}>
 						{	
 							Object.keys(Camera.Constants.Type).length &&
