@@ -7,7 +7,7 @@ import { DEFAULT_NAME } from '../constants';
 import { BarcodeProps, Barcode } from '../types';
 import { genId } from '../utils';
 import { addBarcode } from '../storage/storage';
-import { withNavigationFocus, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
 	container: {

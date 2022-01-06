@@ -81,7 +81,7 @@ export default function BarcodeModal({ barcode, show, closeModal }: BarcodeModal
 
 	const onDeleteBarcode = () => {
 		removeBarcode(barcode.id);
-		closeModal();
+		closeModal(barcode.id);
 	};
 
 	const onEditBarcode = () => {
