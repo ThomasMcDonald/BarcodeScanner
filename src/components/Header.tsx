@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, SafeAreaView,View, Text, StatusBar } from 'react-native';
+import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import { Entypo  } from '@expo/vector-icons';
 
 type Header = {
@@ -46,7 +47,8 @@ export default function Header(props: Header): JSX.Element {
 	const { title = "QR Scanner", headerRight } = options;
 
 	return (
-		<SafeAreaView style={styles.header}>	
+		<SafeAreaView style={styles.header}>
+			<ExpoStatusBar style="auto"/>	
 			<View style={styles.content}>
 				<View style={styles.buttonContainers}>
 					{

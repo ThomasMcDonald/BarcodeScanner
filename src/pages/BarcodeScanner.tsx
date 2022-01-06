@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, Dimensions, Platform, StatusBar  } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, Text, SafeAreaView, View, Pressable, Dimensions, Platform, StatusBar  } from 'react-native';
 import { Camera } from 'expo-camera';
 import { BarCodeScanner as ExpoBarCodeScanner } from 'expo-barcode-scanner';
 import { AntDesign  } from '@expo/vector-icons';
@@ -7,10 +7,12 @@ import { DEFAULT_NAME } from '../constants';
 import { BarcodeProps, Barcode } from '../types';
 import { genId } from '../utils';
 import { addBarcode } from '../storage/storage';
+import { withNavigationFocus, useIsFocused } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: 'black'
 	},
 	information: { 
 		flex: 1,
@@ -32,7 +34,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: 'transparent',
 		paddingTop: StatusBar.currentHeight,
-		margin: 10
+		marginRight: 10,
+		marginBottom: 10
 	},
 	bottomButtonContainer: {
 		flex: 1,
@@ -54,11 +57,12 @@ const styles = StyleSheet.create({
 export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Element {
 	const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
 	const [hasCameraPermission, setHasCameraPermission] = useState(null);
-	const [camera, setCamera] = useState(null);
-	const [ratio, setRatio] = useState('4:3');  // default is 4:3
+	const camera = useRef(null);
+	const [ratio, setRatio] = useState('16:9'); 
 	const { height, width } = Dimensions.get('window');
 	const screenRatio = height / width;
 	const [isRatioSet, setIsRatioSet] =  useState(false);
+	const isFocused = useIsFocused();
 
 	/**
 	 * Got this from stackoverflow
@@ -72,7 +76,7 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 
 		// This issue only affects Android
 		if (Platform.OS === 'android') {
-			const ratios = await camera.getSupportedRatiosAsync();
+			const ratios = await camera.current.getSupportedRatiosAsync();
 
 			// Calculate the width/height of each of the supported camera ratios
 			// These width/height are measured in landscape mode
@@ -133,6 +137,14 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 		navigation.pop();
 	};
 
+	const flipCamera = () => {
+		setCameraType(
+			cameraType === Camera.Constants.Type.back
+				? Camera.Constants.Type.front
+				: Camera.Constants.Type.back
+		);
+	};
+
 	useEffect(() => {
 		async function getCameraStatus() {
 			const { status } = await Camera.requestCameraPermissionsAsync();
@@ -145,12 +157,12 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 	function CameraClose():JSX.Element {
 		return (
 			<View style={styles.topButtonContainer}>
-				<TouchableOpacity
+				<Pressable
 					style={styles.button}
 					onPress={closeCamera}
 				>
 					<AntDesign name="close" size={24} color="white" />
-				</TouchableOpacity>
+				</Pressable>
 			</View>
 		);
 	}
@@ -174,42 +186,39 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 		return (
 			<InformationBooth information={"Please enable camera permissions"} />
 		);
-	} else {
-		return (
-			<SafeAreaView style={styles.container}>
-				<Camera 
-					style={[styles.camera, {}]}
-					type={cameraType}
-					ratio={ratio}
-					onCameraReady={setCameraReady}
-					ref={(ref) => {
-						setCamera(ref);
-					}}
-					onBarCodeScanned={handleBarcodeScan}
-					barCodeScannerSettings={{
-						barCodeTypes: [ExpoBarCodeScanner.Constants.BarCodeType.qr],
-					}}
-				>	
+	} else if (isFocused) {
+		return (	
+			<Camera 
+				style={styles.camera}
+				type={cameraType}
+				ratio={ratio}
+				onCameraReady={setCameraReady}
+				ref={camera}
+				onBarCodeScanned={handleBarcodeScan}
+				barCodeScannerSettings={{
+					barCodeTypes: [ExpoBarCodeScanner.Constants.BarCodeType.qr],
+				}}
+			>	
+
+				<View  style={styles.topButtonContainer}>
 					<CameraClose />
+
 					<View style={styles.bottomButtonContainer}>
 						{	
 							Object.keys(Camera.Constants.Type).length &&
-							<TouchableOpacity
-								style={styles.button}
-								onPress={() => {
-							
-									setCameraType(
-										cameraType === Camera.Constants.Type.back
-											? Camera.Constants.Type.front
-											: Camera.Constants.Type.back
-									);
-								}}>
-								<AntDesign name="swap" size={24} color="white" />
-							</TouchableOpacity>
+								<Pressable
+									style={styles.button}
+									onPress={flipCamera}>
+									<AntDesign name="swap" size={24} color="white" />
+								</Pressable>
 						}
 					</View>
-				</Camera>
-			</SafeAreaView>
+				</View>
+			</Camera>
 		);
+	}  else {
+		return (
+			<InformationBooth information={"Somethings Broken"} />
+		); 
 	}
 }
