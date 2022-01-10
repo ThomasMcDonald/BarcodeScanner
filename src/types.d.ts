@@ -18,14 +18,17 @@ type BarcodeModalProps = {
 type RootStackParamList = {
 	Home: undefined;
 	Scanner: undefined;
+	Settings: undefined;
 };
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>
 type BarcodeProps = NativeStackScreenProps<RootStackParamList, 'Scanner'>
+type SettingsProps = NativeStackScreenProps<RootStackParamList, 'Settings'>
 
 export type {
 	HomeProps,
 	BarcodeProps,
+	SettingsProps,
 	Permission,
 	Barcode,
 	BarcodeModalProps

@@ -161,7 +161,7 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 					style={styles.button}
 					onPress={closeCamera}
 				>
-					<AntDesign name="close" size={24} color="white" />
+					<AntDesign name='close' size={24} color='white' />
 				</Pressable>
 			</View>
 		);
@@ -180,11 +180,11 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 
 	if (hasCameraPermission === null) {
 		return (
-			<InformationBooth information={"Waiting For Camera Permissions"} />
+			<InformationBooth information={'Waiting For Camera Permissions'} />
 		);
 	} else if (hasCameraPermission === false) {
 		return (
-			<InformationBooth information={"Please enable camera permissions"} />
+			<InformationBooth information={'Please enable camera permissions'} />
 		);
 	} else if (isFocused) {
 		return (	
@@ -209,7 +209,7 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 								<Pressable
 									style={styles.button}
 									onPress={flipCamera}>
-									<AntDesign name="swap" size={24} color="white" />
+									<AntDesign name='swap' size={24} color='white' />
 								</Pressable>
 						}
 					</View>
@@ -218,7 +218,7 @@ export default function BarcodeScanner({ navigation }: BarcodeProps): JSX.Elemen
 		);
 	}  else {
 		return (
-			<InformationBooth information={"Somethings Broken"} />
+			<InformationBooth information={'Somethings Broken'} />
 		); 
 	}
 }

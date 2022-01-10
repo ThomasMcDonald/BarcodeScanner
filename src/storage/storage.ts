@@ -48,10 +48,16 @@ async function editBarcode(id: string, barcode: Partial<Barcode>): Promise<Barco
 	return updatedData; 
 }
 
+async function clearAppData(): Promise<void> {
+	const keys = await AsyncStorage.getAllKeys();
+	await AsyncStorage.multiRemove(keys);
+}
+
 export {
 	addBarcode,
 	removeBarcode,
 	editBarcode,
 	getAllBarcodes,
-	getBarcodeById
+	getBarcodeById,
+	clearAppData
 };

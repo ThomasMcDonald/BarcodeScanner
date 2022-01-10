@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "BarcodeScanner",
-    "slug": "BarcodeScanner",
-    "version": "2.0.0",
+    "name": "QR Scanner",
+    "slug": "QRScanner",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -18,14 +18,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.thomasmcdonald.BarcodeScanner"
+      "bundleIdentifier": "com.thomasmcdonald.QRScanner"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.thomasmcdonald.BarcodeScanner"
+      "versionCode": 4,
+      "package": "com.thomasmcdonald.QRScanner"
     },
     "web": {
       "favicon": "./assets/favicon.png"

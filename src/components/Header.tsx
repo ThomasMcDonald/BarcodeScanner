@@ -42,20 +42,17 @@ const styles = StyleSheet.create({
 });
 
 export default function Header(props: Header): JSX.Element {
-	const { back, navigation, options } = props;
+	const { options } = props;
 	
-	const { title = "QR Scanner", headerRight } = options;
+	const { title = 'QR Scanner', headerRight, headerLeft } = options;
 
 	return (
 		<SafeAreaView style={styles.header}>
-			<ExpoStatusBar style="auto"/>	
+			<ExpoStatusBar style='auto'/>	
 			<View style={styles.content}>
 				<View style={styles.buttonContainers}>
 					{
-						back && 	
-						<Pressable onPress={navigation.goBack}>
-							<Entypo style={styles.backButtonText}  name="arrow-left" color="black" />
-						</Pressable>
+						headerLeft && headerLeft()
 					}
 				</View>
 				<View style={styles.brandContainer}>

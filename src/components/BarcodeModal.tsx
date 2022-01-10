@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import QRCode from 'react-native-qrcode-svg';
 import { AntDesign  } from '@expo/vector-icons';
-
-import { View, Text, Pressable, Modal, StyleSheet, TextInput } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
+import { View, Text, Pressable, Modal, StyleSheet, TextInput, ToastAndroid, Linking  } from 'react-native';
 import { Barcode, BarcodeModalProps } from '../types';
 import { editBarcode, removeBarcode } from '../storage/storage';
 
@@ -71,6 +71,10 @@ const styles = StyleSheet.create({
 	},
 	saveButton: {
 		fontSize: 25
+	},
+	barcodeData: { 
+		fontSize: 15, 
+		paddingTop: 10 
 	}
 });
 
@@ -78,6 +82,8 @@ export default function BarcodeModal({ barcode, show, closeModal }: BarcodeModal
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [barcodeName, setBarcodeName] = useState<string>(barcode.name);
 	const nameInput = useRef(null);
+
+	const isUrl = barcode.data.match(/^http(s)?:\/\//g);
 
 	const onDeleteBarcode = () => {
 		removeBarcode(barcode.id);
@@ -106,6 +112,23 @@ export default function BarcodeModal({ barcode, show, closeModal }: BarcodeModal
 		closeModal(barcode.id);
 	};
 
+	const handleDataClick = () => {
+
+		if(isUrl) {
+			Linking.canOpenURL(barcode.data).then(supported => {
+				if (supported) {
+					ToastAndroid.show(`Opening ${barcode.data}`, ToastAndroid.SHORT);
+					Linking.openURL(barcode.data);
+				} else {
+					ToastAndroid.show(`Cannot open ${barcode.data}`, ToastAndroid.SHORT);
+				}
+			});
+		} else {
+			Clipboard.setString(barcode.data);
+			ToastAndroid.show('Copied to Clipboard!', ToastAndroid.SHORT);
+		}
+	};
+
 	useEffect(() => {
 		if(isEditing && nameInput.current) {
 			nameInput.current.focus();
@@ -114,7 +137,7 @@ export default function BarcodeModal({ barcode, show, closeModal }: BarcodeModal
 
 	return (
 		<Modal
-			animationType="slide"
+			animationType='slide'
 			transparent={true}
 			visible={show}
 			onRequestClose={onModalClose}
@@ -124,7 +147,7 @@ export default function BarcodeModal({ barcode, show, closeModal }: BarcodeModal
 					<View style={styles.modalTopButtonContainer}>
 						<Pressable
 							onPress={onModalClose}>
-							<AntDesign name="close" size={24} color="black" />
+							<AntDesign name='close' size={24} color='black' />
 						</Pressable>
 					</View>
 					<View style={styles.modalContent}>
@@ -142,6 +165,9 @@ export default function BarcodeModal({ barcode, show, closeModal }: BarcodeModal
 							value={barcode.data}
 							size={150}
 						/> 
+						<Text style={styles.barcodeData}>
+							{barcode.data}		
+						</Text>
 					</View>
 					{
 						isEditing ?
@@ -169,6 +195,21 @@ export default function BarcodeModal({ barcode, show, closeModal }: BarcodeModal
 									>
 										<Text style={styles.textStyle}>Delete</Text>
 									</Pressable>
+									{
+										isUrl ?
+											(
+												<Pressable style={[styles.button, styles.buttonClose]} onPress={handleDataClick}>
+													<Text style={styles.textStyle}>Open in Browser</Text>
+												</Pressable>
+											)
+											:
+											(
+												<Pressable style={[styles.button, styles.buttonClose]} onPress={handleDataClick}>
+													<Text style={styles.textStyle}>Copy</Text>
+												</Pressable>
+											)
+
+									}
 									<Pressable 
 										style={[styles.button, styles.buttonClose]}
 										onPress={onEditBarcode}

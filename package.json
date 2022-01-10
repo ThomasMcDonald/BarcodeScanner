@@ -1,7 +1,6 @@
 {
-  "name": "barcodescanner",
-  "version": "1.0.1",
-  "main": "node_modules/expo/AppEntry.js",
+  "name": "qrscanner",
+  "version": "1.0.0",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -13,11 +12,14 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
+    "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "expo": "~44.0.0",
     "expo-barcode-scanner": "~11.2.0",
-    "expo-camera": "~12.1.0",
+    "expo-camera": "12.0.3",
+    "expo-clipboard": "^2.1.0",
+    "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "~1.2.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AntDesign  } from '@expo/vector-icons';
-import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable, StatusBar } from 'react-native';
+import { SafeAreaView, FlatList, StyleSheet, Text, View, Pressable } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Camera } from 'expo-camera';
 import { Barcode, Permission, HomeProps } from '../types';
@@ -41,6 +41,18 @@ const styles = StyleSheet.create({
 	},
 	headerAction: {
 		textAlign: 'center'
+	},
+	scanBarcodeBtn: {
+		width: 60,  
+		height: 60,   
+		borderRadius: 30,            
+		backgroundColor: '#2196F3',                                    
+		position: 'absolute',                                          
+		bottom: 10,                                                    
+		right: 10, 
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
 	}
 });
 
@@ -69,7 +81,11 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 	const enableScanner = () => {
 		navigation.navigate('Scanner');
 	};
-	
+
+	const openSettings = () => {
+		navigation.navigate('Settings');
+	};
+
 	useEffect(() => {
 		loadInitialData();
 	}, [isFocused]);
@@ -81,9 +97,9 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 	useEffect(() => {
 		navigation.setOptions({ 
 			headerShown: true,
-			headerRight: () => (
-				<Pressable onPress={enableScanner}>
-					<AntDesign name="pluscircle" size={25}  color="black" style={styles.headerAction}/>
+			headerLeft: () => (
+				<Pressable onPress={openSettings}>
+					<AntDesign name='setting' size={25}  color='black' style={styles.headerAction}/>
 				</Pressable>
 			)
 		});
@@ -142,13 +158,15 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 	return (
 		<SafeAreaView style={styles.container}>	
 			{showModal && <BarcodeModal barcode={currentBarcode} show={showModal} closeModal={onModalClose}/>	}
-		
+
 			<FlatList 
 				data={barcodes}
 				renderItem={renderItem}
 				keyExtractor={(item) => item.id}
 			/> 
-		
+			<Pressable onPress={enableScanner} style={styles.scanBarcodeBtn}>
+				<AntDesign name='plus' size={25}  color='white'/>
+			</Pressable>
 		</SafeAreaView>
 	);
 }
