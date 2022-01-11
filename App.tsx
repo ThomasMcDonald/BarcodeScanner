@@ -5,7 +5,6 @@ import Home from './src/pages/Home';
 import Header from './src/components/Header';
 import BarcodeScanner from './src/pages/BarcodeScanner';
 import Settings from './src/pages/Settings';
-import { StatusBar } from 'expo-status-bar';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +35,6 @@ export default function App(): JSX.Element {
 					}}
 				/>
 			</Stack.Navigator>
-			<StatusBar style='dark'/>
 		</NavigationContainer>
 	);
 }

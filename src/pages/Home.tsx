@@ -7,6 +7,7 @@ import { Barcode, Permission, HomeProps } from '../types';
 import { getAllBarcodes, getBarcodeById } from '../storage/storage';
 import BarcodeModal from '../components/BarcodeModal';
 import QRCode from 'react-native-qrcode-svg';
+import { StatusBar } from 'expo-status-bar';
 
 const styles = StyleSheet.create({
 	container: {
@@ -167,6 +168,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 			<Pressable onPress={enableScanner} style={styles.scanBarcodeBtn}>
 				<AntDesign name='plus' size={25}  color='white'/>
 			</Pressable>
+			<StatusBar style='dark'/>
 		</SafeAreaView>
 	);
 }

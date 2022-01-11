@@ -5,6 +5,7 @@ import config from '../../app.json';
 import { SettingsProps } from '../types';
 import { GITHUB_URL } from '../constants';
 import { clearAppData } from '../storage/storage';
+import { StatusBar } from 'expo-status-bar';
 
 type SettingsListProps = {	
 	key: string;
@@ -120,6 +121,7 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
 			<View style={styles.aboutApp}>
 				<Text> Version: {config.expo.version}:{config.expo.android.versionCode} </Text>
 			</View>
+			<StatusBar style='dark'/>
 		</SafeAreaView>
 	);
 }
